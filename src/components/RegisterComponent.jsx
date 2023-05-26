@@ -22,12 +22,13 @@ const RegisterComponent = () => {
   const registerApi = async (email, password) => {
     try {
       let res = await RegisterAPI(email, password);
+      // res.user.sendEmailVerification();
       toast.success("Account Created!");
-      navigate("/home");
+      // navigate("/home");
       console.log(res);
     } catch (err) {
-      console.log(err.code);
-      toast.error("Account already exists");
+      console.log(err);
+      toast.error("Oops ! something went wrong.");
     }
   };
 

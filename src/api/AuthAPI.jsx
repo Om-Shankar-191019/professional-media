@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
@@ -27,6 +28,16 @@ export const RegisterAPI = (email, password) => {
 export const GoogleSignInAPI = () => {
   try {
     const provider = new GoogleAuthProvider();
+    let response = signInWithPopup(auth, provider);
+    return response;
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+export const FacebookSignInAPI = () => {
+  try {
+    const provider = new FacebookAuthProvider();
     let response = signInWithPopup(auth, provider);
     return response;
   } catch (err) {

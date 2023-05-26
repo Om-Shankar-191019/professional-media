@@ -1,32 +1,86 @@
 import React, { useState } from "react";
-import { GoogleSignInAPI, LoginAPI } from "../api/AuthAPI";
+import { FacebookSignInAPI, GoogleSignInAPI, LoginAPI } from "../api/AuthAPI";
 import LinkedInLogo from "../assets/LinkedInLogo.png";
 import { BiShow, BiHide } from "react-icons/bi";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+
 const LoginComponent = () => {
   let navigate = useNavigate();
-  const [credentails, setCredentails] = useState({});
+  const [credentails, setCredentails] = useState({
+    email: null,
+    password: null,
+  });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  function togglePasswordVisibility() {
+    setIsPasswordVisible((prevState) => !prevState);
+  }
+
+  const forgetPassword = () => {
+    sendPasswordResetEmail(auth, credentails.email)
+      .then(() => {
+        // Password reset email sent!
+        toast.success("Reset link sent. Check your inbox");
+      })
+      .catch((error) => {
+        if (credentails.email) {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          if (errorCode === "auth/invalid-email") {
+            toast.info("Invalid email format");
+            // Provide appropriate prompt to the user for invalid email format
+          } else if (errorCode === "auth/user-not-found") {
+            toast.info("User not found");
+            // Provide appropriate prompt to the user for user not found
+          } else {
+            console.log(errorMessage);
+            // Provide a general error prompt to the user
+          }
+        } else toast.info("Please! Enter the email");
+      });
+  };
 
   const login = async () => {
     try {
       let res = await LoginAPI(credentails.email, credentails.password);
       toast.success("Signed In successfull");
+      navigate("/home");
+      console.log(res);
     } catch (err) {
-      toast.error("please check your credentials");
+      console.log(err);
+      toast.error("Please check your credentials");
     }
   };
 
   const googleSignIn = async () => {
     try {
       let res = await GoogleSignInAPI();
-      // console.log(res);
+      toast.success("Signed In successfull");
+      navigate("/home");
+      console.log(res);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+      toast.error("Please check your credentials");
     }
   };
+
+  const facebookSignIn = async () => {
+    try {
+      let res = await FacebookSignInAPI();
+      toast.success("Signed In successfull");
+      navigate("/home");
+      console.log(res);
+    } catch (err) {
+      console.log(err.message);
+      toast.error("Please check your credentials");
+    }
+  };
+
   return (
     <div>
       <img src={LinkedInLogo} className="h-16 my-4 mx-8 mb-2 sm:h-20" alt="" />
@@ -37,27 +91,42 @@ const LoginComponent = () => {
           </p>
           <input
             type="text"
-            placeholder="Email or Phone number"
-            className="border-2 outline-none border-gray-800 rounded-md px-2 py-2"
+            placeholder="Email"
+            className="border-2 outline-none border-gray-800 rounded-md px-2 py-3"
             onChange={(event) =>
               setCredentails({ ...credentails, email: event.target.value })
             }
           />
           <div className="flex items-center justify-between border-2  border-gray-800 rounded-md ">
             <input
-              type="password"
+              type={isPasswordVisible ? "text" : "password"}
               placeholder="Password"
-              className="outline-none px-2 py-2"
+              className="outline-none px-2 py-3 w-4/5"
               onChange={(event) =>
                 setCredentails({ ...credentails, password: event.target.value })
               }
             />
-            <BiHide size={24} className="mr-2 cursor-pointer text-gray-600" />
+            <div onClick={togglePasswordVisibility}>
+              {isPasswordVisible ? (
+                <BiShow
+                  size={24}
+                  className="mr-2 cursor-pointer text-gray-600"
+                />
+              ) : (
+                <BiHide
+                  size={24}
+                  className="mr-2 cursor-pointer text-gray-600"
+                />
+              )}
+            </div>
           </div>
           <div>
-            <a href="#" className="text-[#0077b5] text-bold font-bold text-lg">
+            <p
+              onClick={forgetPassword}
+              className="text-[#0077b5] text-bold font-bold text-lg cursor-pointer"
+            >
               Forget Password?
-            </a>
+            </p>
           </div>
           <button
             onClick={login}
@@ -81,7 +150,10 @@ const LoginComponent = () => {
             Sign In with Google
           </button>
 
-          <button className="flex justify-center items-center border border-gray-500 rounded-3xl p-3 text-gray-600 font-semibold ">
+          <button
+            onClick={facebookSignIn}
+            className="flex justify-center items-center border border-gray-500 rounded-3xl p-3 text-gray-600 font-semibold "
+          >
             <SiFacebook
               size={24}
               className="mr-2 cursor-pointer  text-blue-700"
