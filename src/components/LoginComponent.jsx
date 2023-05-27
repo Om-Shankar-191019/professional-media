@@ -121,12 +121,12 @@ const LoginComponent = () => {
             </div>
           </div>
           <div>
-            <p
+            <span
               onClick={forgetPassword}
               className="text-[#0077b5] text-bold font-bold text-lg cursor-pointer"
             >
               Forget Password?
-            </p>
+            </span>
           </div>
           <button
             onClick={login}
