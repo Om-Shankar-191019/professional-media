@@ -50,7 +50,7 @@ const LoginComponent = () => {
       let res = await LoginAPI(credentails.email, credentails.password);
       toast.success("Signed In successfull");
       navigate("/home");
-      console.log(res);
+      localStorage.setItem("userEmail", res.user.email);
     } catch (err) {
       console.log(err);
       toast.error("Please check your credentials");
@@ -62,7 +62,7 @@ const LoginComponent = () => {
       let res = await GoogleSignInAPI();
       toast.success("Signed In successfull");
       navigate("/home");
-      console.log(res);
+      localStorage.setItem("userEmail", res.user.email);
     } catch (err) {
       console.log(err.message);
       toast.error("Please check your credentials");
@@ -74,7 +74,7 @@ const LoginComponent = () => {
       let res = await FacebookSignInAPI();
       toast.success("Signed In successfull");
       navigate("/home");
-      console.log(res);
+      localStorage.setItem("userEmail", res.user.email);
     } catch (err) {
       console.log(err.message);
       toast.error("Please check your credentials");

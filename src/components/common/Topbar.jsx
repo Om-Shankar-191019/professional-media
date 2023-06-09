@@ -6,9 +6,13 @@ import { HiBriefcase } from "react-icons/hi";
 import { IoMdNotifications } from "react-icons/io";
 import { BsMessenger, BsFillCollectionPlayFill } from "react-icons/bs";
 import TopbarLinks from "./TopbarLinks";
+import ProfilePopupModal from "./ProfilePopupModal";
 
 const Topbar = () => {
   const [search, setSearch] = useState();
+  // const [showProfilePopup, setShowProfilePopup] = useState(false);
+  const [profilePopupOpen, setProfilePopupOpen] = useState(false);
+
   return (
     <div className="h-16 w-full bg-white py-4 px-8 flex justify-between items-center">
       <div className="flex justify-center items-center">
@@ -29,14 +33,36 @@ const Topbar = () => {
       </div>
 
       <div className="flex items-center justify-center space-x-2">
-        <TopbarLinks Icon={AiFillHome} title="Home" />
-        <TopbarLinks Icon={FaUserFriends} title="Network" />
-        <TopbarLinks Icon={HiBriefcase} title="Jobs" />
-        <TopbarLinks Icon={BsMessenger} title="messaging" />
-        <TopbarLinks Icon={IoMdNotifications} title="Notifications" />
-        <TopbarLinks Icon={BsFillCollectionPlayFill} title="Learning" />
-        <TopbarLinks avatar={true} userImg={LinkedInLogo} title="Me" />
+        <TopbarLinks Icon={AiFillHome} title="Home" to="/" />
+        <TopbarLinks Icon={FaUserFriends} title="Network" to="/network" />
+        <TopbarLinks Icon={HiBriefcase} title="Jobs" to="/jobs" />
+        <TopbarLinks Icon={BsMessenger} title="messaging" to="/chats" />
+        <TopbarLinks
+          Icon={IoMdNotifications}
+          title="Notifications"
+          to="/notification"
+        />
+        <TopbarLinks
+          Icon={BsFillCollectionPlayFill}
+          title="Learning"
+          to="/learning"
+        />
+
+        <div
+          onClick={() => setProfilePopupOpen(true)}
+          className="flex flex-col items-center cursor-pointer p-2 rounded-md  hover:bg-gray-200 duration-200"
+        >
+          <img alt="my photo" src={LinkedInLogo} className="h-6" />
+          <p className="text-sm text-gray-600 font-semibold duration-200 ">
+            Me
+          </p>
+        </div>
       </div>
+
+      <ProfilePopupModal
+        profilePopupOpen={profilePopupOpen}
+        setProfilePopupOpen={setProfilePopupOpen}
+      />
     </div>
   );
 };

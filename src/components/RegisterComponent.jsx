@@ -25,7 +25,7 @@ const RegisterComponent = () => {
       // res.user.sendEmailVerification();
       toast.success("Account Created!");
       // navigate("/home");
-      console.log(res);
+      localStorage.setItem("userEmail", res.user.email);
     } catch (err) {
       console.log(err);
       toast.error("Oops ! something went wrong.");

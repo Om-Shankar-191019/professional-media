@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   FacebookAuthProvider,
+  signOut,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
@@ -42,5 +43,13 @@ export const FacebookSignInAPI = () => {
     return response;
   } catch (err) {
     alert(err.message);
+  }
+};
+
+export const onLogout = () => {
+  try {
+    signOut(auth);
+  } catch (err) {
+    return err;
   }
 };
