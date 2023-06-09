@@ -50,6 +50,24 @@ const RegisterComponent = () => {
             )}
           >
             <input
+              {...register("name", {
+                required: "Name is required.",
+                pattern: {
+                  value: /^[a-z]+$/i,
+                  message: "Invalid name",
+                },
+              })}
+              type="text"
+              placeholder="Your name"
+              className="border-2 hover:border-[#0077b5] duration-150 outline-none rounded-md px-2 py-3 w-full mb-8"
+            />
+            {errors.name && (
+              <p className="text-sm text-red-600 mb-4 -mt-8">
+                {errors.name.message}
+              </p>
+            )}
+
+            <input
               {...register("email", {
                 required: "Email is required.",
                 pattern: {
